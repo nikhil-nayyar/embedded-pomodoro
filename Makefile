@@ -1,5 +1,5 @@
 
-PROJECT=my-blinky
+PROJECT=embedoro
 
 SRCS := $(shell ls src/)
 SRCS_DIR := $(SRCS:%=src/%)
@@ -13,7 +13,7 @@ CC = arm-none-eabi-gcc -I $(INC) -g
 CFLAGS = -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16
 
 LD = arm-none-eabi-ld
-LDFLAGS = -T$(LINKER_FILE) -e Reset_Handler $(OBJS_DIR)
+LDFLAGS = -T$(LINKER_FILE) -e Reset_Handler $(OBJS_DIR) 
 
 OBJCOPY = arm-none-eabi-objcopy 
 FLASHER = lm4flash
