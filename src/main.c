@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+#include "bsp.h"
 #include "tm4c123gh6pm.h"
 #include "display.h"
 #include "utility.h"
@@ -14,35 +14,28 @@ void initialize_port_f(){
     write_reg_mask(&GPIO_PORTF_DIR_R, 0xF, 0xF, VALUE);
 }
 
-void initialize_port_d(){
-}
 
 int main(void){
 
     // Configure Register
+    initialize_fpu();
     initialize_port_f();  
     initialize_system_clock(80, PIOSC, M16);
-    initialize_systick();
+    initialize_systick(1);
 
-
+    // Configure SSI
     initialize_ssi();
     configure_display();
-    fill_display(0,0,0);
+    draw_display(0,0,0);
 
     int count = 0;
 
-    while(1){
-        int current = read_reg_by_mask(&GPIO_PORTF_DATA_R, 0xFF);
-        if(current){
-            write_reg_mask(&GPIO_PORTF_DATA_R, 0x1 << 3, 0x1 << 3, BIT_OFF);
-        } else{
-            write_reg_mask(&GPIO_PORTF_DATA_R, 0x1 << 3, 0x1 << 3, BIT_ON);
-        }
 
-        write_character(count+'0');
-        count = (count + 1) % 10;
+
+    // Infinite Loop
+    while(1){
+        write_test_character((count++)+'A');
         delay_10ms(10);
     }
-
 
 }
