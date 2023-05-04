@@ -87,30 +87,6 @@ void write_data_bit(ADDRESS reg, uint8_t index, bit_t value);
  */
 uint32_t read_reg_by_mask(ADDRESS reg, uint32_t mask);
 
-// --- SYSTEM OPERATIONS --- //
-typedef enum{A,B,C,D,E,F} ports_t;
-
-/*
- * Function: initialize port clock
- * ----------------------------
- *   activate clock for GPIO port
- *
- *   port: port enum to activate
- *
- */
-void initialize_port_clock(ports_t port);
-
-typedef enum{MOSC, PIOSC, PIOSC_4, LFIOSC} OSCSRC_t;
-typedef enum{N1,N2, N3, N4, N5, N6, M4, M4096, M49152, M5, M512, M6, M6144, M73728, 
-            M8, M8192, M10, M12, M12288, M1356, M1421818, M16, 
-            M16384, M18, M20, M24, M25
-            } XTAL_t;
-
-static double system_clock_speed;
-void initialize_system_clock(double clock_speed, OSCSRC_t src, XTAL_t external_speed);
-
-
-void initialize_systick();
 
 
 // --- SPI OPERATIONS --- //
@@ -155,7 +131,9 @@ void initialize_ssi();
 void configure_display();
 
 
-// --- Systick --- //
-void delay_10ms(uint32_t time);
+
+
+// --- Utils --- //
+unsigned char reverse_byte(unsigned char);
 
 #endif 
