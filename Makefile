@@ -9,11 +9,11 @@ OBJS_DIR := $(OBJS:%=obj/%)
 LINKER_FILE = ld/TM4C123GH6PM.ld
 
 INC = inc/
-CC = arm-none-eabi-gcc -I $(INC) -g
-CFLAGS = -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16
+CC = arm-none-eabi-gcc -I $(INC) -ggdb
+CFLAGS = -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
-LD = arm-none-eabi-ld
-LDFLAGS = -T$(LINKER_FILE) -e Reset_Handler $(OBJS_DIR) 
+LD = arm-none-eabi-ld 
+LDFLAGS = -T$(LINKER_FILE) -e Reset_Handler $(OBJS_DIR) -Lm
 
 OBJCOPY = arm-none-eabi-objcopy 
 FLASHER = lm4flash
@@ -37,11 +37,15 @@ clean:
 	rm -rf obj/
 	rm -rf bin/
 
-flash: all
+flash: all free
 	lm4flash bin/$(PROJECT).bin
 
+free: 
+	pkill openocd || echo "ICDI is already free."
+
 debug: flash
-	openocd -f /home/nayyar/Development/embedded/tools/openocd-code/tcl/board/ti_ek-tm4c123gxl.cfg
+	openocd -f /home/nayyar/Development/embedded/tools/openocd-code/tcl/board/ti_ek-tm4c123gxl.cfg&
+	arm-none-eabi-gdb /home/nayyar/Development/embedded/projects/embedded-pomodoro/bin/embedoro.elf 
 
 test:
 	echo $(SRCS)
