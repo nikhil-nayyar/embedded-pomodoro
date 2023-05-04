@@ -26,15 +26,13 @@ int main(void){
     // Configure SSI
     initialize_ssi();
     configure_display();
-    draw_display(0,0,0);
+    fill_display(0,0,0);
 
     int count = 0;
 
-
-
     // Infinite Loop
     while(1){
-        write_test_character((count++)+'A');
+        write_character((count++)+'A');
         delay_10ms(10);
     }
 

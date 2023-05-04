@@ -2,7 +2,6 @@
 #define UTILITY_H
 
 #include <stdint.h>
-#include "font.h"
 
 // --- MACROS --- //
 #define ADDRESS volatile uint32_t*
@@ -134,6 +133,14 @@ void configure_display();
 
 
 // --- Utils --- //
-unsigned char reverse_byte(unsigned char);
+
+/**
+ * returns byte data reversed
+ * uses lookup table
+ * 
+ * @param char
+ * 
+*/
+unsigned char reverse_byte(unsigned char character);
 
 #endif 

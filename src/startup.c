@@ -20,7 +20,14 @@ const vector_table_element vector_table[] __attribute__((section(".vector_table"
     SysTick_Handler,            // 15   SysTick Timer handler
 };
 
-
+/**
+*  function run on device reset
+*
+*  performs 3 major steps:
+*   1. copies .data segment from device flash to sram
+*   2. initializes undefined globals to 0
+*   3. calls main()
+*/
 void Reset_Handler(void){
 
 
@@ -45,6 +52,10 @@ void Reset_Handler(void){
 
 }
 
+/**
+ * default handler when NVIC handler not defined
+ * runs infinite loop
+*/
 void Handler(void){
     while(1){
 

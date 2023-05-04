@@ -240,6 +240,6 @@ static const unsigned char reverse_table[] = {
     0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff,
 };
 
-unsigned char reverse_byte(unsigned char x){
-    return reverse_table[x];
+unsigned char reverse_byte(unsigned char character){
+    return reverse_table[character];
 }

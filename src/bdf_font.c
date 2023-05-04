@@ -1,8 +1,12 @@
-#include "test_font.h"
+#include "bdf_font.h"
 
 const int height = 10;
 const int width = 10;
 
+/*
+	array of characters
+	generated from BDF file using bdf_extractor python tool
+*/
 const Character test_font[] = {
 	{
 		6,
