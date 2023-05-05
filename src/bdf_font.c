@@ -7,7 +7,7 @@ const int width = 10;
 	array of characters
 	generated from BDF file using bdf_extractor python tool
 */
-const Character test_font[] = {
+const Character bdf_font[] = {
 	{
 		6,
 		10,

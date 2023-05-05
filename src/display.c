@@ -1,22 +1,26 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "font.h"
+#include "bdf_font.h"
+#include "bsp.h"
 #include "utility.h"
 #include "display.h"
 
 
 // --- Cursor --- //
 
-const int HBUFF = 15;
-const int VBUFF = 15;
+#define H_PADDING 15
+#define V_PADDING 15
 
 typedef struct {
     int x; // start at origin x = 4
     int y; // start at origin y = 8
 } Cursor;
-static Cursor cursor = {15, 15};
+static Cursor cursor = {H_PADDING, V_PADDING};
 
+/**
+ * move cursor according to bdf specification
+*/
 void move_cursor(int offset_x, int offset_y, int width, int height){
 
     // move cursor to right by character width
@@ -71,7 +75,7 @@ void send_pixel(uint8_t red, uint8_t green, uint8_t blue){
 }
 
 // --- Functional Draw Commands --- //
-void draw_display(uint8_t red, uint8_t green, uint8_t blue){
+void fill_display(uint8_t red, uint8_t green, uint8_t blue){
     set_col_address(0,127);
     set_row_address(0,159);
 
@@ -83,46 +87,9 @@ void draw_display(uint8_t red, uint8_t green, uint8_t blue){
     }
 }
 
-void write_character(char input){
+void write_character(char letter){
 
-    set_col_address(cursor.x, cursor.x-1);
-    set_row_address(cursor.y, cursor.y-1);
-    send_data();
-
-    char byte1 = 0;
-    char byte2 = 0;
-
-    for(int r = 0; r < 7; r++){
-        for(int c = 0; c < 8; c++){
-
-            int fg = font[input][r][c];
-            int red = 0 * fg;
-            int blue = 0 * fg;
-            int green = 255 * fg;
-
-            send_pixel(red, green, blue);
-        }
-    }
-
-    move_cursor(7,8,7,8);
-
-}
-
-int chtoi(char c){
-    int current = 0;
-    if (c >= 'A' && c <= 'F'){
-        current = c - 65 + 10;
-    } else if (c >= '0' && c <= '9'){
-        current = c - 48;
-    } else{
-        current = 0;
-    }
-    return current & 0xF;
-}
-
-void write_test_character(char letter){
-
-    Character input = test_font[letter-32];
+    Character input = bdf_font[letter-32];
 
     // Generate Grid Addresses
     // TODO: create struct to store area
@@ -131,6 +98,19 @@ void write_test_character(char letter){
 
     int ye = cursor.y - input.dHeight;
     int ys = ye - (input.height - 1) ;
+
+    // add cursor check
+    if(xs < XMAX && xe > XMAX){
+        // move to next row
+        xs = XMIN;
+        xe = xs + (input.width-1);
+        ys = ys + 10;
+        ye = ye+40;
+    }
+
+    if (ys < YMAX && ye > YMAX){
+        // move to beginning ot page
+    }
 
     set_address(xs, xe, ys, ye);
     send_data();
@@ -167,7 +147,6 @@ void write_test_character(char letter){
             row>>=1;
         }
     }
-
 
     move_cursor(input.dWidth, input.dHeight, input.width, input.height);
 

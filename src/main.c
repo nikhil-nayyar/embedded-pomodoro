@@ -32,7 +32,7 @@ int main(void){
 
     // Infinite Loop
     while(1){
-        write_character((count++)+'A');
+        write_character((count++)+'0');
         delay_10ms(10);
     }
 

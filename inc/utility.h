@@ -87,51 +87,6 @@ void write_data_bit(ADDRESS reg, uint8_t index, bit_t value);
 uint32_t read_reg_by_mask(ADDRESS reg, uint32_t mask);
 
 
-
-// --- SPI OPERATIONS --- //
-/*
- * Function: send ssi command
- * ----------------------------
- *   send command instruction via SSI
- *
- *   command: 8 bit command instruction
- *
- */
-void send_ssi_command(uint8_t command);
-
-/*
- * Function: send ssi data
- * ----------------------------
- *   send data instruction via ssi
- *
- *   command: 8 bit command instruction
- * 
- */
-void send_ssi_data(uint8_t data);
-
-
-/*
- * Function: initialize ssi
- * ----------------------------
- *   setup ssi module on MCU
- *
- * 
- */
-void initialize_ssi();
-
-
-/*
- * Function: configure display
- * ----------------------------
- *   send series of commands/data to setup display
- *
- * 
- */
-void configure_display();
-
-
-
-
 // --- Utils --- //
 
 /**
@@ -142,5 +97,17 @@ void configure_display();
  * 
 */
 unsigned char reverse_byte(unsigned char character);
+
+/**
+ * converts hex character into integer
+ * returns 0 if invalid character not (0-9,A-F)
+ * 
+ * @param c
+ *  character to convert to hex
+ * 
+ * @return 
+ *  integer
+*/
+int chtoi(char c);
 
 #endif 
