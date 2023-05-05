@@ -79,7 +79,7 @@ void initialize_systick(unsigned int period)
 
     // calculate and load reload value
     // unsigned int reload = ( (float) pow(10,-3) / ( 1 / (system_clock_frequency * (float) pow(10,6) ) ) ) - 1;
-    unsigned int reload = 83332;
+    unsigned int reload = 833332;
     write_reg_mask(&NVIC_ST_RELOAD_R, NVIC_ST_RELOAD_M, reload, VALUE);
 
     // write to current to force reload

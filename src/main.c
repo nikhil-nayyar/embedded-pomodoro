@@ -26,14 +26,12 @@ int main(void){
     // Configure SSI
     initialize_ssi();
     configure_display();
-    fill_display(0,0,0);
 
     int count = 0;
 
     // Infinite Loop
     while(1){
-        write_character((count++)+'0');
-        delay_10ms(10);
+        render_display();
     }
 
 }
