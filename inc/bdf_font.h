@@ -12,4 +12,14 @@ typedef struct {
     char bitmap[25]; // bitmap defined as string of hex characters
 } Character;
 
+typedef struct{
+	const char name[10];
+	const unsigned short base_ascii;
+	const unsigned short width;
+	const unsigned short height;
+	Character characters[256];
+} Font;
+
+const Character* get_character(char character);
+
 #endif
