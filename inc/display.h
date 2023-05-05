@@ -2,6 +2,7 @@
 #define DISPLAY_H
 
 #include <stdint.h>
+#include "application.h"
 #include "bdf_font.h"
 
 // --- Macro Definitions --- //
@@ -17,8 +18,49 @@
 #define RASET 0x2B
 #define RAMWR 0x2C
 
+// --- structs --- //
+
+typedef struct{
+    uint8_t xs;
+    uint8_t xe;
+    uint8_t ys;
+    uint8_t ye;
+} Area;
+
+typedef struct{
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+} Color;
+
+typedef struct {
+    int x; 
+    int y; 
+    short blink;
+    short blink_state;
+    Font *font;
+} Cursor;
+
+typedef struct{
+    Color fg;
+    Color bg;
+} Settings;
+
+// --- Rendering --- //
+
+/**
+ * series of rendering functions to call
+ * for any given event
+*/
+void render_display();
+
+
+// --- Cursor --- //
+
+void render_cursor();
+
 // --- Fonts --- //
-extern const Character bdf_font[];
+extern const Font bitbuntu;
 
 // --- Display Functions --- //
 
@@ -36,7 +78,7 @@ void write_character(char character);
  * @param col
  *  column to hold line
  */
-void draw_v_line(uint16_t col);
+void draw_v_line(uint8_t col, Color color);
 
 /**
  * draw horizontal line on display
@@ -44,32 +86,25 @@ void draw_v_line(uint16_t col);
  * @param row
  *  row to hold line
  */
-void draw_h_line(uint16_t row);
+void draw_h_line(uint8_t row, Color color);
 
-/**
- * draw rectange on display
- * 
- * @param xs
- *  starting x position
- * @param xe
- *  ending x position
- * @param ys
- *  starting y position
- * @param ye
- *  ending y position
- */
-void draw_rectangle(uint16_t xs, uint16_t xe, uint16_t ys, uint16_t ye);
 
 /**
  * fill entire display with designated rgb color
  * 
- * @param red
- *  0-255 r value
- * @param green
- *  0-255 g value
- * @param blue
- *  0-255 b value
+ * @param Color
+ *  Color to fill display
 */
-void fill_display(uint8_t red, uint8_t green, uint8_t blue);
+void fill_display(Color color);
+
+/**
+ * draw rectangle on display
+ * 
+ * @param area
+ *  Area to draw rectangle over
+ * @param color
+ *  Color for rectangle
+ */
+void draw_rectangle(Area area, Color color);
 
 #endif
