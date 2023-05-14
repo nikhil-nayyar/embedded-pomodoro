@@ -46,6 +46,48 @@ typedef struct{
     Color bg;
 } Settings;
 
+// --- Initialization --- //
+/*
+ * Function: send ssi command
+ * ----------------------------
+ *   send command instruction via SSI
+ *
+ *   command: 8 bit command instruction
+ *
+ */
+void send_lcd_command(uint8_t command);
+
+/*
+ * Function: send ssi data
+ * ----------------------------
+ *   send data instruction via ssi
+ *
+ *   command: 8 bit command instruction
+ * 
+ */
+void send_lcd_data(uint8_t data);
+
+
+/*
+ * Function: initialize ssi
+ * ----------------------------
+ *   setup ssi module on MCU
+ *
+ * 
+ */
+void initialize_display();
+
+
+/*
+ * Function: configure display
+ * ----------------------------
+ *   send series of commands/data to setup display
+ *
+ * 
+ */
+void configure_display();
+
+
 // --- Rendering --- //
 
 /**

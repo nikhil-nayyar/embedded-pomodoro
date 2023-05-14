@@ -30,46 +30,6 @@ typedef enum{A,B,C,D,E,F} ports_t;
 void initialize_port_clock(ports_t port);
 
 
-// --- SSI --- //
-/*
- * Function: send ssi command
- * ----------------------------
- *   send command instruction via SSI
- *
- *   command: 8 bit command instruction
- *
- */
-void send_ssi_command(uint8_t command);
-
-/*
- * Function: send ssi data
- * ----------------------------
- *   send data instruction via ssi
- *
- *   command: 8 bit command instruction
- * 
- */
-void send_ssi_data(uint8_t data);
-
-
-/*
- * Function: initialize ssi
- * ----------------------------
- *   setup ssi module on MCU
- *
- * 
- */
-void initialize_ssi();
-
-
-/*
- * Function: configure display
- * ----------------------------
- *   send series of commands/data to setup display
- *
- * 
- */
-void configure_display();
 
 
 
