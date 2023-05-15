@@ -62,11 +62,16 @@ void initialize_array(){
 
 void write_array_command_all(uint16_t instruction){
     write_data_bit(GPIO_PORTA_DATA_BITS_R, 3, ON);
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 4; i++){
         SSI0_DR_R = instruction;
-    write_data_bit(GPIO_PORTA_DATA_BITS_R, 3, OFF);
-    // delay_block_us();
-    
+
+        while(!SSI0_RIS_R & 0x8)
+            ;
+    }
+    write_data_bit(GPIO_PORTA_DATA_BITS_R, 3, OFF);    
+    delay_block_ms(1);
+    write_data_bit(GPIO_PORTA_DATA_BITS_R, 3, ON);
+
 }
 
 /**
@@ -84,9 +89,10 @@ void write_array_command(uint8_t block, uint16_t instruction){
 
         while(!SSI0_RIS_R & 0x8)
             ;
-
     }
     write_data_bit(GPIO_PORTA_DATA_BITS_R, 3, OFF);
+    delay_block_ms(1);
+    write_data_bit(GPIO_PORTA_DATA_BITS_R, 3, ON);
 }
 
 void enable_test(){
@@ -124,14 +130,34 @@ void write_array_line(uint8_t line, uint8_t pattern){
 }
 
 
-void increment_bar_test(){
+void increment_bar(){
     if(top <= 31){
         write_array_line(top++, 0xFF);
     } 
 }
 
-void decrement_bar_test(){
+void decrement_bar(){
     if(top >= 0){
         write_array_line(top--, 0x00);
     } 
+}
+
+void fill_bar(){
+
+    uint16_t instruction;
+    for(int i = 1; i <= 8; i++){
+        instruction = ((i) << 8) | 0xFF;
+        write_array_command_all(instruction);
+    }
+    top = 31;
+}
+
+void clear_bar(){
+
+    uint16_t instruction;
+    for(int i = 1; i <= 8; i++){
+        instruction = ((i) << 8) | 0x00;
+        write_array_command_all(instruction);
+    }
+    top = 0;
 }

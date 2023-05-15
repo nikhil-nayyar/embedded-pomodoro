@@ -11,8 +11,8 @@ int _isatty();
 int _lseek(); 
 int _write(int file, char* ptr, int len);
 
-int __bss_start__;
-int __bss_end__;
+// int __bss_start__;
+// int __bss_end__;
 int _kill;
 int _getpid;
 

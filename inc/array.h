@@ -14,6 +14,11 @@ void write_array_command(uint8_t block, uint16_t instruction);
 
 void write_array_line(uint8_t line, uint8_t pattern);
 
+// --- Functional --- //
+void fill_bar();
+
+void clear_bar();
+
 // --- Test --- //
 void test_led_array();
 
@@ -27,8 +32,8 @@ void disable_shutdown();
 
 void blank();
 
-void increment_bar_test();
+void increment_bar();
 
-void decrement_bar_test();
+void decrement_bar();
 
 #endif

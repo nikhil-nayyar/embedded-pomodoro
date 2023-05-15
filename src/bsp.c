@@ -82,7 +82,7 @@ void initialize_wtimer0(){
 
     /* Configure Timer */
     WTIMER0_CTL_R &= ~(TIMER_CTL_TAEN); // disable timer
-    WTIMER0_CTL_R |= TIMER_CTL_TASTALL; // disable timer while debugging
+    //WTIMER0_CTL_R |= TIMER_CTL_TASTALL; // disable timer while debugging
     WTIMER0_CFG_R = TIMER_CFG_16_BIT; // Set at 32 bit timer
     WTIMER0_TAMR_R = TIMER_TAMR_TAMR_PERIOD; // set timer to fire periodically
     WTIMER0_IMR_R = TIMER_IMR_TATOIM; // set interrupt to trigger on end of count
@@ -90,7 +90,7 @@ void initialize_wtimer0(){
     /* Configure NVIC */
     // vector 110 int 94
     NVIC_EN2_R |= (0x1 << (94-64)); // Enable interrupt 19
-    /* TODO: set priority */
+    NVIC_PRI23_R |= (0x0 << NVIC_PRI23_INTC_S);
  }
 
 void WTimer0A_Handler(void){
@@ -105,28 +105,19 @@ void WTimer0A_Handler(void){
     control_flag = 0;
 }
 
-volatile static uint32_t delay_block_ms_count = 0;
-
 void delay_block_us(unsigned int n){
 
     uint32_t count = n * TIMER_1US;
 
-    WTIMER0_TAILR_R = count;
-
     control_flag = 1;
-
+    WTIMER0_TAILR_R = count;
     WTIMER0_CTL_R |= (TIMER_CTL_TAEN); // enable timer
 
     while(control_flag)
         ;
 
-    if(delay_block_ms)
-        delay_block_ms_count--;
-
 }
 
 void delay_block_ms(unsigned int n){
-    delay_block_ms_count = n;
-    while(delay_block_ms_count)
-        delay_block_us(1000);
+    delay_block_us(1000*n);
 }
