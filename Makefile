@@ -40,7 +40,7 @@ clean:
 	rm -rf obj/
 	rm -rf bin/
 
-flash: lazy free
+flash: all free
 	lm4flash bin/$(PROJECT).bin
 
 free: 
