@@ -29,10 +29,6 @@ typedef enum{A,B,C,D,E,F} ports_t;
  */
 void initialize_port_clock(ports_t port);
 
-
-
-
-
 // --- System Clock --- //
 
 typedef enum{MOSC, PIOSC, PIOSC_4, LFIOSC} OSCSRC_t;
@@ -59,20 +55,24 @@ void initialize_system_clock(double frequency, OSCSRC_t source, XTAL_t xtal_freq
 // --- Systick & Timing --- //
 
 /**
- * initialize SysTick interrupt, uses clock frequency set in 
- * initialize_system_clock().
- * 
- * @param period
- *  time interval (in ms) for firing SysTick interrupt
+ * initialize Timer
 */
-void initialize_systick(unsigned int period);
+// void initialize_timer0();
+
+void initialize_wtimer0();
 
 /**
- * delay n*10ms
+ * delay n*1us
  * 
  * @param n
- *  number of times to delay 10ms
+ *  number of times to delay 1us
 */
-void delay_10ms(unsigned int n);
+void delay_block_us(unsigned int n);
+
+void delay_block_ms(unsigned int n);
+
+void initialize_systick();
+
+void delay_systick_ms(uint32_t n);
 
 #endif

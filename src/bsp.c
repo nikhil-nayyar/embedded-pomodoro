@@ -27,13 +27,14 @@ void initialize_fpu(){
     );
 }
 
-// --- GPIO --- //
+// --- Ports --- //
 void initialize_port_clock(ports_t port)    
 {
     write_reg_mask(&SYSCTL_RCGCGPIO_R, 0x1 << port, 0x1 << port, BIT_ON);
 }
 
-/* System Clock */
+// --- System Clock --- //
+
 void initialize_system_clock(double clock_speed, OSCSRC_t src, XTAL_t xtal)
 {
 
@@ -68,48 +69,64 @@ void initialize_system_clock(double clock_speed, OSCSRC_t src, XTAL_t xtal)
     write_reg_mask(&SYSCTL_RCC2_R, SYSCTL_RCC2_BYPASS2, SYSCTL_RCC2_BYPASS2, BIT_OFF);
 }
 
-// --- SysTick and Timing --- //
+// --- Timer and Timing --- //
 
-volatile unsigned int count = 0;
+#define TIMER_1US 83
 
-void initialize_systick(unsigned int period)
-{
-    // disable counter
-    write_reg_mask(&NVIC_ST_CTRL_R, NVIC_ST_CTRL_ENABLE, NVIC_ST_CTRL_ENABLE, BIT_OFF);
+volatile uint8_t control_flag;
 
-    // calculate and load reload value
-    // unsigned int reload = ( (float) pow(10,-3) / ( 1 / (system_clock_frequency * (float) pow(10,6) ) ) ) - 1;
-    unsigned int reload = 833332;
-    write_reg_mask(&NVIC_ST_RELOAD_R, NVIC_ST_RELOAD_M, reload, VALUE);
+void initialize_wtimer0(){
 
-    // write to current to force reload
-    write_reg_mask(&NVIC_ST_CURRENT_R, NVIC_ST_CURRENT_S, 0x0, VALUE);
+    /* Configure System */
+    SYSCTL_RCGCWTIMER_R |= 0x1; // Enable Timer 0 Clock
 
-    // enable interrupt
-    write_reg_mask(
-        &NVIC_ST_CTRL_R, 
-        NVIC_ST_CTRL_ENABLE | NVIC_ST_CTRL_INTEN | NVIC_ST_CTRL_CLK_SRC, 
-        NVIC_ST_CTRL_ENABLE | NVIC_ST_CTRL_INTEN | NVIC_ST_CTRL_CLK_SRC, 
-        BIT_ON
-    );
+    /* Configure Timer */
+    WTIMER0_CTL_R &= ~(TIMER_CTL_TAEN); // disable timer
+    WTIMER0_CTL_R |= TIMER_CTL_TASTALL; // disable timer while debugging
+    WTIMER0_CFG_R = TIMER_CFG_16_BIT; // Set at 32 bit timer
+    WTIMER0_TAMR_R = TIMER_TAMR_TAMR_PERIOD; // set timer to fire periodically
+    WTIMER0_IMR_R = TIMER_IMR_TATOIM; // set interrupt to trigger on end of count
+
+    /* Configure NVIC */
+    // vector 110 int 94
+    NVIC_EN2_R |= (0x1 << (94-64)); // Enable interrupt 19
+    /* TODO: set priority */
+ }
+
+void WTimer0A_Handler(void){
+
+    /* Disable Timer */
+    WTIMER0_CTL_R &= ~(TIMER_CTL_TAEN); // disable timer
+
+    /* Clear Flag */
+    WTIMER0_ICR_R = TIMER_ICR_TATOCINT;
+
+    /* Set control flag to false */
+    control_flag = 0;
 }
 
-void SysTick_Handler(void)
-{
-    if (count != 0)
-    {
-        count--;
-    }
+volatile static uint32_t delay_block_ms_count = 0;
+
+void delay_block_us(unsigned int n){
+
+    uint32_t count = n * TIMER_1US;
+
+    WTIMER0_TAILR_R = count;
+
+    control_flag = 1;
+
+    WTIMER0_CTL_R |= (TIMER_CTL_TAEN); // enable timer
+
+    while(control_flag)
+        ;
+
+    if(delay_block_ms)
+        delay_block_ms_count--;
+
 }
 
-void delay_10ms(unsigned int n)
-{
-    count = n;
-    while (count != 0)
-    {
-    }
+void delay_block_ms(unsigned int n){
+    delay_block_ms_count = n;
+    while(delay_block_ms_count)
+        delay_block_us(1000);
 }
-
-
-// --- SSI --- //
-
