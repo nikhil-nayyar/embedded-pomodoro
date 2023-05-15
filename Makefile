@@ -13,7 +13,7 @@ CC = arm-none-eabi-gcc -I $(INC) -ggdb
 CFLAGS = -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
 LD = arm-none-eabi-ld 
-LDFLAGS = -T$(LINKER_FILE) -e Reset_Handler $(OBJS_DIR) -Lm
+LDFLAGS = -T$(LINKER_FILE) -e Reset_Handler $(OBJS_DIR) -Lm -Lc
 
 OBJCOPY = arm-none-eabi-objcopy 
 FLASHER = lm4flash
@@ -33,11 +33,14 @@ all: $(PROJECT).bin
 	mkdir -p obj/
 	$(CC) $(CFLAGS) -c $^ -o obj/$(@)
 
+lazy: 
+	$(CC) $(CFLAGS) $(SRCS_DIR) -T$(LINKER_FILE) -e Reset_Handler -o bin/$(PROJECT).elf
+
 clean:
 	rm -rf obj/
 	rm -rf bin/
 
-flash: all free
+flash: lazy free
 	lm4flash bin/$(PROJECT).bin
 
 free: 
