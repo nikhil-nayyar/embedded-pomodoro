@@ -10,7 +10,7 @@ void initialize_array();
 
 void write_array_command_all(uint16_t instruction);
 
-void write_array_command(uint16_t instruction);
+void write_array_command(uint8_t block, uint16_t instruction);
 
 void write_array_line(uint8_t line, uint8_t pattern);
 
@@ -28,5 +28,7 @@ void disable_shutdown();
 void blank();
 
 void increment_bar_test();
+
+void decrement_bar_test();
 
 #endif
