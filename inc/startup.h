@@ -29,6 +29,16 @@ WEAK void HardFault_Handler(void);
 WEAK void MemManageFault_Handler(void);
 WEAK void BusFault_Handler(void);
 WEAK void UsageFault_Handler(void);
+WEAK void GPIOA_Handler(void);
+WEAK void GPIOB_Handler(void);
+WEAK void GPIOC_Handler(void);
+WEAK void GPIOD_Handler(void);
+WEAK void GPIOE_Handler(void);
+WEAK void Timer0_Handler(void);
+WEAK void UART2_Handler(void);
+WEAK void WTimer0A_Handler(void);
+WEAK void WTimer1A_Handler(void);
+WEAK void Placeholder(void);
 
 /**
  * main function ... 'nuff said
